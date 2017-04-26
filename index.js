@@ -23,5 +23,7 @@ Promise.resolve()
   .catch(err => console.error(err.stack))
   // Finally, launch Node.js app 
   .finally(() => { 
-    app.listen(port, () => console.log(`Listening on ${port}!`))
+    app.listen(port, () => {
+      console.log(`Listening on http://localhost:${port}!`)
+    })
   });
