@@ -11,5 +11,8 @@
     "kettering"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "sqlite": "^2.5.0"
+  }
 }
