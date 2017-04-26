@@ -20,6 +20,7 @@ app.get('/post/:id', async (req, res, next) => {
 Promise.resolve()
   // First, try connect to the database 
   .then(() => db.open('./database.sqlite3', { Promise }))
+  .then(() => db.migrate({ force: 'last' }))
   .catch(err => console.error(err.stack))
   // Finally, launch Node.js app 
   .finally(() => { 
