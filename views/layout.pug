@@ -6,17 +6,25 @@ html
     block stylesheets
   body
     .container
-      nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.mb-2
-        button.navbar-toggler.navbar-toggler-right
+      nav.navbar.navbar-toggleable-sm.navbar-light.bg-faded.mb-2
+        button.navbar-toggler.navbar-toggler-right(
+          type='button' data-toggle='collapse'
+          data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false'
+          aria-label='Toggle navigation'
+        )
           span.navbar-toggler-icon
         a.navbar-brand(href="/") KUClubs
-        .collapse.navbar-collapse
+        .collapse.navbar-collapse#navbarNav
           ul.navbar-nav.mr-auto
             li.nav-item.active
               a.nav-link(href="/") Home
-        form.form-inline
-          a.btn.btn-outline-success(href='/create') Register Club
+          form.form-inline
+            a.btn.btn-outline-success(href='/create').mr-1 Register Club
+            a.btn.btn-outline-secondary(href='/person/create') Register Person
       block content
     block scripts
-    script(href='/static/bootstrap/js/bootstrap.min.js')
+    
+    script(src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous")
 
