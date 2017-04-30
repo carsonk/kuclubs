@@ -118,8 +118,10 @@ app.post('/club/:id/add', async(req, res, next) => {
       db.get('SELECT * FROM membership WHERE club_id = ? AND person_id = ?', req.params.id, req.body.person_id)
     ]);
 
-    if (!club || !person)
+    if (!club || !person) {
       res.status(404).send('Club or person was not found.');
+      return;
+    }
 
     if (member)
       error = 'That person is already a part of that club.';
@@ -133,6 +135,22 @@ app.post('/club/:id/add', async(req, res, next) => {
     } else {
       clubAddMember(req, res, next, error);
     }
+  } catch(err) {
+    next(err);
+  }
+});
+
+app.get('/club/:id/event/add', async (req, res, next) => {
+  try {
+    const club = await db.get('SELECT * FROM clubs WHERE id = ?', req.params.id);
+    
+    if (!club) {
+      res.status(404).send('Club or person was not found.');
+      return;
+    }
+
+    const context = { title: 'Add event', club: club };
+    res.render('add_event', context);
   } catch(err) {
     next(err);
   }

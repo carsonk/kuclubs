@@ -8,20 +8,24 @@ html
   body
     .container
       nav.navbar.navbar-toggleable-sm.fixed-top.navbar-light.bg-faded.mb-2
-        button.navbar-toggler.navbar-toggler-right(
-          type='button' data-toggle='collapse'
-          data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false'
-          aria-label='Toggle navigation'
-        )
-          span.navbar-toggler-icon
-        a.navbar-brand(href="/") KUClubs
-        .collapse.navbar-collapse#navbarNav
-          ul.navbar-nav.mr-auto
-            li.nav-item.active
-              a.nav-link(href="/") Home
-          form.form-inline
-            a.btn.btn-outline-success(href='/create').mr-1 Register Club
-            a.btn.btn-outline-secondary(href='/person/create') Register Person
+        .container
+          button.navbar-toggler.navbar-toggler-right(
+            type='button' data-toggle='collapse'
+            data-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false'
+            aria-label='Toggle navigation'
+          )
+            span.navbar-toggler-icon
+          a.navbar-brand(href="/")
+            span.align-top(style='color: #777; font-size: .97rem;') ku
+            span.align-middle(style='color: #0f6dac; font-size: 1.25rem;') /
+            span.align-bottom clubs
+          .collapse.navbar-collapse#navbarNav
+            ul.navbar-nav.mr-auto
+              li.nav-item.active
+                a.nav-link(href="/") Home
+            form.form-inline
+              a.btn.btn-outline-success(href='/create').mr-1 Register Club
+              a.btn.btn-outline-secondary(href='/person/create') Register Person
       block content
     block scripts
     
