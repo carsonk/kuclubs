@@ -18,8 +18,6 @@ CREATE TABLE students (
     id INT PRIMARY KEY,
     person_id INT NOT NULL,
     class INT,
-    officer_title VARCHAR(255),
-    is_officer TINYINT,
     FOREIGN KEY(person_id) REFERENCES persons(id)
 );
 
