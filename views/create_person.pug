@@ -1,0 +1,33 @@
+extends layout.pug
+
+block content
+  .container
+    form.card(method='post')
+      .card-header Register Person
+      .card-block
+        .form-group
+          label Name
+          .row
+            .col-md-6
+              input.form-control(name='first_name' type='text' placeholder='First name' required)
+            .col-md-6
+              input.form-control(name='last_name' type='text' placeholder='Last name' required)
+        .form-group
+          label Email
+          input.form-control(name='email' type='email' placeholder='Person\'s email address' required)
+        fieldset.form-group
+          legend Group
+          .row
+            .form-check.col-md-3
+              label.form-check-label
+                input.form-check-input(type='radio' name='group' value='student' checked)
+                | 
+                | &nbsp;Student
+            .form-check.col-md-3
+              label.form-check-label
+                input.form-check-input(type='radio' name='group' value='faculty')
+                | 
+                | &nbsp;Faculty
+      .card-footer
+        input.btn.btn-primary(type='submit' value='Create')
+
