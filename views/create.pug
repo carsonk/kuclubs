@@ -1,0 +1,20 @@
+extends layout.pug
+
+block content
+  .container.p-2
+    h3 Register Club
+    .card
+      .card-block
+        form
+          .form-group
+            label Name
+            input.form-control(type='text' placeholder='Name of the club')
+          .form-group
+            label Description
+            textarea.form-control
+          .form-group
+            label Date Created
+            input.form-control(type='date')
+          .form-group
+            input.btn.btn-primary(type='submit' value='Create')
+

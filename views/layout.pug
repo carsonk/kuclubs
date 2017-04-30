@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= 'KUClubs - ' + title
+    link(rel='stylesheet', href='/static/bootstrap/css/bootstrap.min.css')
+    block stylesheets
+  body
+    .container
+      nav.navbar.navbar-toggleable-md.navbar-light.bg-faded.mb-2
+        button.navbar-toggler.navbar-toggler-right
+          span.navbar-toggler-icon
+        a.navbar-brand(href="/") KUClubs
+        .collapse.navbar-collapse
+          ul.navbar-nav.mr-auto
+            li.nav-item.active
+              a.nav-link(href="/") Home
+        form.form-inline
+          a.btn.btn-outline-success(href='/create') Register Club
+      block content
+    block scripts
+    script(href='/static/bootstrap/js/bootstrap.min.js')
+
