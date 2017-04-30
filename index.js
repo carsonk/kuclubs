@@ -66,10 +66,16 @@ app.get('/club/:id', async (req, res, next) => {
     const [club, announcements, members] = await Promise.all([
       db.get('SELECT * FROM clubs WHERE id = ?', req.params.id),
       db.all('SELECT * FROM announcements WHERE club_id = ?', req.params.id),
-      db.all('SELECT p.*, m.* FROM persons p LEFT JOIN membership m ON m.person_id = p.id WHERE m.club_id = ?', req.params.id)
+      db.all('SELECT p.*, m.* FROM persons p INNER JOIN membership m ON m.person_id = p.id WHERE m.club_id = ?', req.params.id)
     ]);
+
+    if (!club)
+      res.status(404).send('Club was not found.');
+
+    console.log(members);
+
     const context = {
-      title: 'Viewing ' + clubs.name, // Does pug clean these strings for us?
+      title: 'Viewing ' + club.name, // Does pug clean these strings for us?
       club: club,
       announcements: announcements,
       members: members
@@ -79,11 +85,63 @@ app.get('/club/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+async function clubAddMember(req, res, next, error) {
+  try {
+    const club = await db.get('SELECT * FROM clubs WHERE id = ?', req.params.id);
+    const people = await db.all('SELECT * FROM persons ORDER BY last_name'); 
+
+    if (!club)
+      res.status(404).send('Club was not found...');
+
+    const context = { 
+      title: 'Add Member to ' + club.name, 
+      club: club,
+      people: people
+    };
+    res.render('add_club_member', context);
+  } catch(err) {
+    next(err);
+  }
+}
+
+app.get('/club/:id/add', async (req, res, next) => {
+  clubAddMember(req, res, next);
+});
+
+app.post('/club/:id/add', async(req, res, next) => {
+  try {
+    let error = null;
+    const [club, person, member] = await Promise.all([
+      db.get('SELECT * FROM clubs WHERE id = ?', req.params.id),
+      db.all('SELECT * FROM persons ORDER BY last_name'),
+      db.get('SELECT * FROM membership WHERE club_id = ? AND person_id = ?', req.params.id, req.body.person_id)
+    ]);
+
+    if (!club || !person)
+      res.status(404).send('Club or person was not found.');
+
+    if (member)
+      error = 'That person is already a part of that club.';
+
+    if (!error) {
+      const is_officer = (req.body.is_officer) ? 1 : 0;
+      let statement = 'INSERT INTO membership (person_id, club_id, joined, active, officer_title, is_officer)';
+      statement += ' VALUES (?, ?, strftime(\'%s\', \'now\'), 1, ?, ?)';
+      db.run(statement, req.body.person_id, req.params.id, req.body.officer_title, is_officer);
+      res.redirect(`/club/${club.id}`);
+    } else {
+      clubAddMember(req, res, next, error);
+    }
+  } catch(err) {
+    next(err);
+  }
+});
  
 Promise.resolve()
   // First, try connect to the database 
   .then(() => db.open('./database.sqlite3', { Promise }))
-  .then(() => db.migrate({ force: 'last' }))
+  .then(() => db.migrate())
   .catch(err => console.error(err.stack))
   // Finally, launch Node.js app 
   .finally(() => { 

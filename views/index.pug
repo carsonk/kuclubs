@@ -6,7 +6,7 @@ block content
       each club in clubs
         .club.card
           .card-block
-            h4.card-title= club.name
+            a.h4.card-title(href='/club/' + club.id)= club.name
             p.card-text= club.description
           .card-footer= `Founded ${club.date_founded}`
 

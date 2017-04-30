@@ -1,0 +1,19 @@
+extends layout.pug
+
+block content
+  .container.p-0.pt-3
+    h2.text-white= club.name
+    .card
+      .card-block
+        .row
+          .col-md-8= club.description
+          .col-md-4
+            h5 Members
+            ul
+              each member in members
+                li
+                  = member.first_name + ' ' + member.last_name
+                  if member.is_officer
+                    span.officer-title= ' (' + member.officer_title + ')'
+            a.btn.btn-outline-success.btn-sm(href=`/club/${club.id}/add`) Add Member
+

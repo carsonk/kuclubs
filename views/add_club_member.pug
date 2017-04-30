@@ -1,0 +1,28 @@
+extends layout.pug
+
+block content
+  .container.vert-center-box
+    form.card(method='post')
+      .card-header= 'Add Person to ' + club.name
+      .card-block
+        if error
+          .alert.alert-warning(role='alert')
+            strong Oops!
+            |=error
+        .form-group
+          label Person
+          select.form-control(name='person_id')
+            each person in people
+              option(value=person.id)= `${person.last_name}, ${person.first_name} (${person.email})`
+        .form-group
+          label Officer
+          .input-group
+            span.input-group-addon
+              input(type='checkbox' name='is_officer' value='1')
+            input.form-control(type='text' name='officer_title' placeholder='Officer title (e.g. President)') 
+      .card-footer
+        a.btn.btn-secondary(href=`/club/${club.id}`) Back
+        |
+        |
+        input.btn.btn-primary(type='submit' value='Create')
+
