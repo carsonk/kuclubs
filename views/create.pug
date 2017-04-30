@@ -2,19 +2,18 @@ extends layout.pug
 
 block content
   .container
-    .card
+    form.card(method='post')
       .card-header Register Club
       .card-block
-        form
-          .form-group
-            label Name
-            input.form-control(type='text' placeholder='Name of the club')
-          .form-group
-            label Description
-            textarea.form-control
-          .form-group
-            label Date Created
-            input.form-control(type='date')
-          .form-group
-            input.btn.btn-primary(type='submit' value='Create')
+        .form-group
+          label Name
+          input.form-control(name='name' type='text' placeholder='Name of the club')
+        .form-group
+          label Description
+          textarea.form-control(name='description')
+        .form-group
+          label Date Created
+          input.form-control(name='dateFounded' type='date')
+      .card-footer
+        input.btn.btn-primary(type='submit' value='Create')
 
