@@ -1,7 +1,10 @@
 doctype html
 html
   head
-    title= 'KUClubs - ' + title
+    title
+      | KUClubs
+      if title
+        = ' - ' + title
     link(rel='stylesheet', href='/static/styles.css')
     link(rel='stylesheet', href='/static/bootstrap/css/bootstrap.min.css')
     block stylesheets
