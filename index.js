@@ -22,7 +22,9 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.get('/', async (req, res, next) => {
   try {
-    const clubs = await db.all('SELECT * FROM clubs');
+    let query = 'SELECT c.*, count(m.person_id) member_count FROM clubs c'
+    query += ' LEFT JOIN membership m ON m.club_id = c.id GROUP BY c.id';
+    const clubs = await db.all(query);
     res.render('index', { title: 'Home', clubs: clubs });
   } catch (err) {
     next(err);
