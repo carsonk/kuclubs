@@ -34,13 +34,18 @@ export default (app) => {
 
   app.get('/person/create', (req, res, next) => {
     const context = { title: 'Register Person' };
-    res.render('create_person', context); 
+    res.render('create_person', context);
   });
 
   app.post('/person/create', async (req, res, next) => {
-    db.run('INSERT INTO persons (email, first_name, last_name) VALUES (?, ?, ?)',
-           req.body.email, req.body.first_name, req.body.last_name);
+    const person = await db.run('INSERT INTO persons (email, first_name, last_name) VALUES (?, ?, ?)',
+      req.body.email, req.body.first_name, req.body.last_name);
     // TODO: Insert records into students or faculty, depending on group selection.
+    if(req.body.group == 'student') {
+      db.run('INSERT INTO students (person_id, class) VALUES (?, ?)', person.stmt.lastID, 'class level yo');
+    } else if(req.body.group == 'faculty') {
+      db.run('INSERT INTO faculty (person_id, department) VALUES (?, ?)', person.stmt.lastID, 'department yo');
+    }
     res.redirect('/');
   });
 
@@ -72,13 +77,13 @@ export default (app) => {
   async function clubAddMember(req, res, next, error) {
     try {
       const club = await db.get('SELECT * FROM clubs WHERE id = ?', req.params.id);
-      const people = await db.all('SELECT * FROM persons ORDER BY last_name'); 
+      const people = await db.all('SELECT * FROM persons ORDER BY last_name');
 
       if (!club)
         res.status(404).send('Club was not found...');
 
-      const context = { 
-        title: 'Add Member to ' + club.name, 
+      const context = {
+        title: 'Add Member to ' + club.name,
         club: club,
         people: people
       };
@@ -88,45 +93,45 @@ export default (app) => {
     }
   }
 
-  app.get('/club/:id/add', async (req, res, next) => {
+  app.get('/club/:id/add', async(req, res, next) => {
     clubAddMember(req, res, next);
   });
 
   app.post('/club/:id/add', async(req, res, next) => {
+    let error = null;
     try {
-      let error = null;
       const [club, person, member] = await Promise.all([
         db.get('SELECT * FROM clubs WHERE id = ?', req.params.id),
         db.all('SELECT * FROM persons ORDER BY last_name'),
         db.get('SELECT * FROM membership WHERE club_id = ? AND person_id = ?', req.params.id, req.body.person_id)
       ]);
-
-      if (!club || !person) {
-        res.status(404).send('Club or person was not found.');
-        return;
-      }
-
-      if (member)
-        error = 'That person is already a part of that club.';
-
-      if (!error) {
-        const is_officer = (req.body.is_officer) ? 1 : 0;
-        let statement = 'INSERT INTO membership (person_id, club_id, joined, active, officer_title, is_officer)';
-        statement += ' VALUES (?, ?, strftime(\'%s\', \'now\'), 1, ?, ?)';
-        db.run(statement, req.body.person_id, req.params.id, req.body.officer_title, is_officer);
-        res.redirect(`/club/${club.id}`);
-      } else {
-        clubAddMember(req, res, next, error);
-      }
     } catch(err) {
       next(err);
+    }
+
+    if (!club || !person) {
+      res.status(404).send('Club or person was not found.');
+      return;
+    }
+
+    if (member)
+      error = 'That person is already a part of that club.';
+
+    if (!error) {
+      const is_officer = (req.body.is_officer) ? 1 : 0;
+      let statement = 'INSERT INTO membership (person_id, club_id, joined, active, officer_title, is_officer)';
+      statement += ' VALUES (?, ?, strftime(\'%s\', \'now\'), 1, ?, ?)';
+      db.run(statement, req.body.person_id, req.params.id, req.body.officer_title, is_officer);
+      res.redirect(`/club/${club.id}`);
+    } else {
+      clubAddMember(req, res, next, error);
     }
   });
 
   app.get('/club/:id/event/add', async (req, res, next) => {
     try {
       const club = await db.get('SELECT * FROM clubs WHERE id = ?', req.params.id);
-      
+
       if (!club) {
         res.status(404).send('Club or person was not found.');
         return;
