@@ -24,11 +24,14 @@ export default (app) => {
   app.post('/create', async (req, res, next) => {
     let name = req.body.name;
     let description = req.body.description;
+    let photoAlbumEmbed = req.body.photoAlbumEmbed;
     let dateFounded = req.body.dateFounded;
 
-    console.log(`POST request: name=${name} description=${description} dateFounded=${dateFounded}`);
+    console.log(`POST request: name=${name} description=${description}
+      photoAlbumEmbed=${photoAlbumEmbed} dateFounded=${dateFounded}`);
 
-    db.run('INSERT INTO clubs (name, description, date_founded) VALUES (?, ?, ?)', name, description, dateFounded);
+    db.run('INSERT INTO clubs (name, description, photo_album_embed, date_founded) VALUES (?, ?, ?, ?)', name,
+      description, photoAlbumEmbed, dateFounded);
     res.redirect('/');
   });
 
@@ -72,6 +75,43 @@ export default (app) => {
     } catch (err) {
       next(err);
     }
+  });
+
+  app.get('/club/:id/edit', async (req, res, next) => {
+    try {
+      const [club, announcements, members] = await Promise.all([
+        db.get('SELECT * FROM clubs WHERE id = ?', req.params.id),
+        db.all('SELECT * FROM announcements WHERE club_id = ?', req.params.id),
+        db.all('SELECT p.*, m.* FROM persons p INNER JOIN membership m ON m.person_id = p.id WHERE m.club_id = ?', req.params.id)
+      ]);
+
+      if (!club)
+        res.status(404).send('Club was not found.');
+
+      console.log(members);
+
+      const context = {
+        title: 'Viewing ' + club.name, // Does pug clean these strings for us?
+        club: club,
+        announcements: announcements,
+        members: members
+      }
+      res.render('club_edit', context);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post('/club/:id/edit', async(req, res, next) => {
+    debugger;
+    let test = req.params;
+    try {
+      db.run('UPDATE clubs SET name = ?, description = ?, date_founded = ?, photo_album_embed = ? WHERE id = ?',
+        req.body.name, req.body.description, req.body.dateFounded, req.body.photoAlbumEmbed, req.params.id);
+    } catch(err) {
+      next(err);
+    }
+    res.redirect(`/club/${req.params.id}`);
   });
 
   async function clubAddMember(req, res, next, error) {

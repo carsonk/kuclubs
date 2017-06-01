@@ -1,0 +1,21 @@
+extends layout.pug
+
+block content
+  .container.vert-center-box
+    form.card(method='post')
+      .card-header Register Club
+      .card-block
+        .form-group
+          label Name
+          input.form-control(name='name' type='text' placeholder='Name of the club' value=club.name)
+        .form-group
+          label Description
+          textarea.form-control(name='description' value=club.description)= club.description
+        .form-group
+          label Date Created
+          input.form-control(name='dateFounded' type='date' value=club.date_founded)
+        .form-group
+          label Photo Album Embed
+          input.form-control(name='photoAlbumEmbed' value=club.photo_album_embed)
+      .card-footer
+        input.btn.btn-primary(type='submit' value='Update')

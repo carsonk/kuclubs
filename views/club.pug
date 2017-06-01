@@ -2,13 +2,15 @@ extends layout.pug
 
 block content
   .container.p-0.pt-3
-    button.btn.btn-warning.float-right Edit Club 
+    a.btn.btn-warning.float-right(href=`/club/${club.id}/edit`) Edit Club
     a.btn.btn-success.float-right.text-white(style='margin-right: 5px;') New Event
     h2.text-white= club.name
     .card
       .card-block
         .row
-          .col-md-8= club.description
+          .col-md-8
+            li= club.description
+            p!= club.photo_album_embed
           .col-md-4
             h5 Members
             ul
@@ -18,4 +20,3 @@ block content
                   if member.is_officer
                     span.officer-title= ' (' + member.officer_title + ')'
             a.btn.btn-outline-success.btn-sm(href=`/club/${club.id}/add`) Add Member
-

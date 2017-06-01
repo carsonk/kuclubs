@@ -1,9 +1,9 @@
 -- UP
 
 CREATE TABLE persons (
-    id INTEGER PRIMARY KEY, 
-    email VARCHAR(255) NOT NULL, 
-    first_name VARCHAR(255) NOT NULL, 
+    id INTEGER PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL
 );
 
@@ -25,6 +25,7 @@ CREATE TABLE clubs (
     id INTEGER PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    photo_album_embed TEXT,
     date_founded DATE
 );
 
@@ -57,4 +58,3 @@ DROP TABLE students;
 DROP TABLE clubs;
 DROP TABLE events;
 DROP TABLE announcements;
-
