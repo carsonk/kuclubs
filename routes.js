@@ -138,9 +138,10 @@ export default (app) => {
   });
 
   app.post('/club/:id/add', async(req, res, next) => {
+    let club, person, member;
     let error = null;
     try {
-      const [club, person, member] = await Promise.all([
+      [club, person, member] = await Promise.all([
         db.get('SELECT * FROM clubs WHERE id = ?', req.params.id),
         db.all('SELECT * FROM persons ORDER BY last_name'),
         db.get('SELECT * FROM membership WHERE club_id = ? AND person_id = ?', req.params.id, req.body.person_id)
